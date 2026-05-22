@@ -1,93 +1,43 @@
-import type {
-  ColorToken,
-  ComponentVariantToken,
-  LayoutTokens,
-  MotionToken,
-  ShadowToken,
-  ShapeToken,
-  SpacingToken,
-  TypographyToken,
-} from "./design-tokens";
+/** Represents one lint issue emitted by DESIGN.md validation. */
+export type LintIssue = {
+  rule: string;
+  message: string;
+  severity: "error" | "warning";
+};
 
-export type DesignMdSectionName =
-  | "Overview"
-  | "Colors"
-  | "Typography"
-  | "Spacing"
-  | "Shapes"
-  | "Elevation & Depth"
-  | "Layout"
-  | "Components"
-  | "Motion";
+/** Represents the full lint result for a rendered DESIGN.md document. */
+export type LintResult = {
+  passed: boolean;
+  errors: LintIssue[];
+  warnings: LintIssue[];
+};
 
-export type DesignMdSectionStatus = "complete" | "partial" | "missing";
-
-export interface DesignMdSection<TContent> {
-  name: DesignMdSectionName;
-  status: DesignMdSectionStatus;
-  content: TContent;
-  warnings: string[];
-}
-
-export interface DesignMdOverviewContent {
-  summary: string | null;
-  tone: string | null;
-  brandAesthetic: string | null;
-}
-
-export interface DesignMdColorContent {
-  tokens: ColorToken[];
-  semanticRoles: Record<string, string | null>;
-}
-
-export interface DesignMdTypographyContent {
-  tokens: TypographyToken[];
-  scaleDescription: string | null;
-}
-
-export interface DesignMdSpacingContent {
-  tokens: SpacingToken[];
-  gridStrategy: string | null;
-}
-
-export interface DesignMdShapeContent {
-  tokens: ShapeToken[];
-  shapeLanguage: string | null;
-}
-
-export interface DesignMdElevationContent {
-  tokens: ShadowToken[];
-  rationale: string | null;
-}
-
-export interface DesignMdLayoutContent {
-  tokens: LayoutTokens;
-}
-
-export interface DesignMdComponentContent {
-  tokens: ComponentVariantToken[];
-}
-
-export interface DesignMdMotionContent {
-  tokens: MotionToken[];
-  principles: string | null;
-}
-
-export interface DesignMdSections {
-  overview: DesignMdSection<DesignMdOverviewContent>;
-  colors: DesignMdSection<DesignMdColorContent>;
-  typography: DesignMdSection<DesignMdTypographyContent>;
-  spacing: DesignMdSection<DesignMdSpacingContent>;
-  shapes: DesignMdSection<DesignMdShapeContent>;
-  elevation: DesignMdSection<DesignMdElevationContent>;
-  layout: DesignMdSection<DesignMdLayoutContent>;
-  components: DesignMdSection<DesignMdComponentContent>;
-  motion: DesignMdSection<DesignMdMotionContent>;
-}
-
-export interface DesignMdDocument {
+/** Represents one rendered DESIGN.md section. */
+export type DesignMdSection = {
   title: string;
+  yaml: string | null;
+  prose: string;
+};
+
+/** Represents the complete structured and rendered DESIGN.md document. */
+export type DesignMdDocument = {
+  name: string;
   version: string;
-  sections: DesignMdSections;
-  warnings: string[];
-}
+  sections: {
+    overview: DesignMdSection;
+    colors: DesignMdSection;
+    typography: DesignMdSection;
+    spacing: DesignMdSection;
+    shapes: DesignMdSection;
+    elevation: DesignMdSection;
+    layout: DesignMdSection;
+    components: DesignMdSection;
+    motion: DesignMdSection;
+    guidelines: DesignMdSection;
+    responsive: DesignMdSection;
+    iteration: DesignMdSection;
+  };
+  raw: string;
+  isValid: boolean;
+  lintResult: LintResult | null;
+};

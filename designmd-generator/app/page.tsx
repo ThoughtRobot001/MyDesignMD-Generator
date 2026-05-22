@@ -1,11 +1,6 @@
-import { InputRouter } from "../components/input/input-router";
+import LandingApp from "../components/landing/App";
 
-/** Renders the landing page and input entry point. */
+/** Renders the integrated mydesign.md frontend. */
 export default function HomePage(): JSX.Element {
-  return (
-    <main>
-      <h1>DesignMD Generator</h1>
-      <InputRouter mode="url" />
-    </main>
-  );
+  return <LandingApp />;
 }

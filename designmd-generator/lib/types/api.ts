@@ -1,69 +1,58 @@
-import type { DesignMdDocument } from "./design-md";
-import type { DesignTokens, TokenSourceType } from "./design-tokens";
+import type { DesignMdDocument, LintResult } from "./design-md";
+import type { DesignTokens, InputSource } from "./design-tokens";
 
-export type ApiSuccessResponse<TData> = {
-  success: true;
-  data: TData;
-  warnings?: string[];
-};
-
-export type ApiErrorResponse = {
-  success: false;
-  error: string;
-  warnings?: string[];
-};
-
-export type ApiResponse<TData> = ApiSuccessResponse<TData> | ApiErrorResponse;
-
-export type GenerateInputType = TokenSourceType;
-
-export type ValidationSeverity = "error" | "warning" | "info";
-
-export interface GenerateRequest {
-  inputType: GenerateInputType;
-  value: string;
-}
-
-export interface GenerateResponseData {
-  tokens: DesignTokens;
-  document: DesignMdDocument;
-  markdown: string;
-  validation: ValidationResponseData;
-}
-
-export interface ParserRequest {
-  inputType: GenerateInputType;
-  value: string;
-}
-
-export interface ParserResponseData {
-  tokens: DesignTokens;
-}
-
-export interface ValidateRequest {
-  markdown: string;
-}
-
-export interface ValidationMessage {
-  severity: ValidationSeverity;
-  message: string;
-  line: number | null;
-  column: number | null;
-  ruleId: string | null;
-}
-
-export interface ValidationResponseData {
-  valid: boolean;
-  messages: ValidationMessage[];
-}
-
-export interface RouteContext<TParams extends Record<string, string> = Record<string, string>> {
-  params: TParams;
-}
-
-export type LegacyApiResponse<TData> = {
+/** Represents the standard response envelope returned by all API routes. */
+export type ApiResponse<T> = {
   success: boolean;
-  data?: TData;
+  data?: T;
   error?: string;
   warnings?: string[];
 };
+
+/** Represents the request body for the main DESIGN.md generation endpoint. */
+export type GenerateRequest = {
+  inputType: InputSource;
+  figmaUrl?: string;
+  figmaToken?: string;
+  imageBase64?: string;
+  imageMimeType?: string;
+  websiteUrl?: string;
+};
+
+/** Represents the response body for the main DESIGN.md generation endpoint. */
+export type GenerateResponse = ApiResponse<DesignMdDocument>;
+
+/** Represents Figma-specific parser input. */
+export type FigmaParseInput = {
+  figmaUrl: string;
+  figmaToken: string;
+};
+
+/** Represents image-specific parser input. */
+export type ImageParseInput = {
+  imageBase64: string;
+  mimeType: string;
+};
+
+/** Represents URL-specific parser input. */
+export type UrlParseInput = {
+  websiteUrl: string;
+};
+
+/** Represents the request body for parser endpoints. */
+export type ParseRequest = { inputType: InputSource } & (
+  | FigmaParseInput
+  | ImageParseInput
+  | UrlParseInput
+);
+
+/** Represents the response body for parser endpoints. */
+export type ParseResponse = ApiResponse<DesignTokens>;
+
+/** Represents the request body for the DESIGN.md validation endpoint. */
+export type ValidateRequest = {
+  content: string;
+};
+
+/** Represents the response body for the DESIGN.md validation endpoint. */
+export type ValidateResponse = ApiResponse<LintResult>;

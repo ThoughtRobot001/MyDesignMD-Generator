@@ -6,6 +6,7 @@ dist/
 build/
 .next/
 out/
+*.tsbuildinfo
 
 # Environment files
 .env
@@ -24,4 +25,3 @@ pnpm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
-

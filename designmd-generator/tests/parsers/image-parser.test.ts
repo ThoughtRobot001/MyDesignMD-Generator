@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseImageTokens, type ImageParserInput } from "../../lib/parsers/image-parser";
+import { parseFromImage as parseImageTokens, type ImageParserInput } from "../../lib/parsers/image-parser";
 
 describe("parseImageTokens", () => {
   /** Verifies the image parser returns the normalized token contract. */

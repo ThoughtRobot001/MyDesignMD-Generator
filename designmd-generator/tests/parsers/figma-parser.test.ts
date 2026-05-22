@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseFigmaTokens, type FigmaParserInput } from "../../lib/parsers/figma-parser";
+import { parseFromFigma as parseFigmaTokens, type FigmaParserInput } from "../../lib/parsers/figma-parser";
 
 describe("parseFigmaTokens", () => {
   /** Verifies the Figma parser returns the normalized token contract. */

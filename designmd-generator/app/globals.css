@@ -1,20 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&family=VT323&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
-  --border: 214 32% 91%;
-  --primary: 221 83% 53%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
+  --background: 0 0% 0%;
+  --foreground: 0 0% 93%;
+  --border: 0 0% 18%;
+  --primary: 174 38% 75%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 7%;
+  --secondary-foreground: 0 0% 93%;
   --radius: 0.5rem;
 }
 
+html,
 body {
   min-height: 100vh;
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
+  overflow-x: hidden;
+  background: #000000;
+  color: #ededed;
+  font-family: "Geist", sans-serif;
+}
+
+.custom-scanlines {
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.015));
+  background-size: 100% 4px, 3px 100%;
+}
+
+.custom-grid {
+  background-size: 32px 32px;
+  background-image:
+    linear-gradient(to right, rgba(46, 46, 46, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(46, 46, 46, 0.25) 1px, transparent 1px);
+}
+
+.custom-dots {
+  background-size: 16px 16px;
+  background-image: radial-gradient(rgba(167, 215, 210, 0.05) 1px, transparent 1px);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2e2e2e;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a7d7d2;
+}
+
+@keyframes blink-cursor {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor-blink-pink {
+  animation: blink-cursor 1s step-end infinite;
+}
+
+@keyframes sweep-animation {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 0.85;
+  }
+
+  95% {
+    opacity: 0.85;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.sweep-active {
+  animation: sweep-animation 5s linear infinite;
 }

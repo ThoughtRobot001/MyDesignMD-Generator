@@ -1,24 +1,29 @@
-export type TokenConfidence = "high" | "medium" | "low" | "unknown";
+/** Represents the input source used for token extraction. */
+export type InputSource = "figma" | "image" | "url";
 
-export type TokenSourceType = "figma" | "image" | "url";
-
-export type ColorFormat = "hex" | "rgb" | "hsl";
-
+/** Represents the semantic role assigned to a color token. */
 export type ColorRole =
   | "primary"
   | "secondary"
-  | "accent"
   | "surface"
   | "background"
+  | "error"
+  | "accent"
   | "text"
   | "muted"
   | "border"
-  | "error"
-  | "warning"
-  | "success";
+  | "unknown"
+  | string; // allows numbered variants such as text2, text3, primary2 produced by the AI
 
-export type FontOrigin = "google-font" | "system" | "custom" | "unknown";
+/** Represents a normalized color token and its accessibility status. */
+export type ColorToken = {
+  hex: string | null;
+  role: ColorRole;
+  wcagAA: boolean;
+  wcagAAA: boolean;
+};
 
+/** Represents the semantic role assigned to a typography token. */
 export type TypographyRole =
   | "h1"
   | "h2"
@@ -30,133 +35,92 @@ export type TypographyRole =
   | "body-md"
   | "body-sm"
   | "label"
-  | "caption";
+  | "caption"
+  | "overline"
+  | "unknown";
 
-export type SpacingUnit = "px" | "rem" | "em";
-
-export type SpacingRole = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
-
-export type RadiusRole = "sm" | "md" | "lg" | "full";
-
-export type ShadowRole = "sm" | "md" | "lg" | "xl";
-
-export type BreakpointRole = "sm" | "md" | "lg" | "xl" | "2xl";
-
-export type ComponentState =
-  | "default"
-  | "hover"
-  | "focus"
-  | "active"
-  | "disabled"
-  | "loading"
-  | "error";
-
-export type ComponentCategory = "button" | "card" | "input" | "nav";
-
-export type MotionRole = "fast" | "base" | "slow" | "enter" | "exit";
-
-export type ContrastStatus = "pass" | "fail" | "unknown";
-
-export interface TokenSource {
-  type: TokenSourceType;
-  value: string;
-  capturedAt: string;
-}
-
-export interface TokenMetadata {
-  confidence: TokenConfidence;
-  source?: string;
-  notes?: string[];
-}
-
-export interface ContrastCheck {
-  foreground: string;
-  background: string;
-  ratio: number | null;
-  status: ContrastStatus;
-  requiredRatio: number;
-}
-
-export interface ColorToken {
-  name: string;
-  value: string | null;
-  format: ColorFormat | null;
-  role: ColorRole | null;
-  luminance: number | null;
-  contrastChecks: ContrastCheck[];
-  metadata: TokenMetadata;
-}
-
-export interface TypographyToken {
-  role: TypographyRole;
+/** Represents a normalized typography token. */
+export type TypographyToken = {
   fontFamily: string | null;
-  fontOrigin: FontOrigin;
   fontSize: string | null;
-  fontWeight: number | string | null;
+  fontWeight: number | null;
   lineHeight: string | null;
   letterSpacing: string | null;
-  metadata: TokenMetadata;
-}
+  role: TypographyRole;
+};
 
-export interface SpacingToken {
-  role: SpacingRole;
-  value: string | null;
-  unit: SpacingUnit | null;
-  pixelValue: number | null;
-  metadata: TokenMetadata;
-}
-
-export interface ShapeToken {
-  role: RadiusRole;
-  borderRadius: string | null;
-  metadata: TokenMetadata;
-}
-
-export interface ShadowToken {
-  role: ShadowRole;
-  value: string | null;
-  metadata: TokenMetadata;
-}
-
-export interface BreakpointToken {
-  role: BreakpointRole;
-  minWidth: string | null;
-  metadata: TokenMetadata;
-}
-
-export interface LayoutTokens {
-  gridStrategy: string | null;
-  maxWidth: string | null;
-  safeArea: string | null;
-  breakpoints: BreakpointToken[];
-}
-
-export interface ComponentVariantToken {
+/** Represents one named spacing value. */
+export type SpacingToken = {
   name: string;
-  category: ComponentCategory;
-  states: ComponentState[];
-  description: string | null;
-  metadata: TokenMetadata;
-}
+  value: string | null;
+  px: number | null;
+};
 
-export interface MotionToken {
-  role: MotionRole;
+/** Represents the inferred spacing scale for a design system. */
+export type SpacingScale = {
+  baseUnit: number | null;
+  tokens: SpacingToken[];
+};
+
+/** Represents one named shape or radius token. */
+export type ShapeToken = {
+  name: string;
+  value: string | null;
+  px: number | null;
+};
+
+/** Represents one named elevation or shadow token. */
+export type ShadowToken = {
+  name: string;
+  value: string | null;
+  isFlat: boolean;
+};
+
+/** Represents one responsive breakpoint token. */
+export type BreakpointToken = {
+  name: string;
+  minWidth: string | null;
+};
+
+/** Represents one motion timing token. */
+export type MotionToken = {
+  name: string;
   duration: string | null;
   easing: string | null;
-  description: string | null;
-  metadata: TokenMetadata;
-}
+};
 
-export interface DesignTokens {
-  source: TokenSource;
-  overview: string | null;
+/** Represents one variant of a component token. */
+export type ComponentVariant = {
+  name: string;
+  description: string | null;
+  states: string[];
+};
+
+/** Represents a normalized component token with variants and notes. */
+export type ComponentToken = {
+  name: string;
+  variants: ComponentVariant[];
+  notes: string | null;
+};
+
+/** Represents metadata about the token extraction result. */
+export type TokenMeta = {
+  source: InputSource;
+  extractedAt: string;
+  confidence: number;
+  warnings: string[];
+  behavioralIntelligence?: string;
+};
+
+/** Represents the complete normalized token object consumed by generators. */
+export type DesignTokens = {
   colors: ColorToken[];
   typography: TypographyToken[];
-  spacing: SpacingToken[];
+  spacing: SpacingScale;
   shapes: ShapeToken[];
   elevation: ShadowToken[];
-  layout: LayoutTokens;
-  components: ComponentVariantToken[];
+  breakpoints: BreakpointToken[];
   motion: MotionToken[];
-  warnings: string[];
-}
+  components: ComponentToken[];
+  meta: TokenMeta;
+};

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseUrlTokens, type UrlParserInput } from "../../lib/parsers/url-parser";
+import { parseFromUrl as parseUrlTokens, type UrlParserInput } from "../../lib/parsers/url-parser";
 
 describe("parseUrlTokens", () => {
   /** Verifies the URL parser returns the normalized token contract. */
